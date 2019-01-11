@@ -1,25 +1,53 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import PhoneFrom from './component/PhoneFrom';
+import PhoneInfoList from './component/PhoneInfoList';
 
 class App extends Component {
+  state = {
+    information: []
+  }
+
+  id = 0;
+
+  create = (data) => {
+    const { information } = this.state;
+    this.setState({
+      information: information.concat({
+        ...data,
+        id: this.id++
+      })
+    });
+  }
+
+
+  hanRemove = (id) => {
+    const { information } = this.state;
+    this.setState({
+      information: information.filter(info => info.id !== id)
+    });
+  }
+
+  handleUpdate = (id, data) => {
+    const { information } = this.state;
+    this.setState({
+      information: information.map(
+        info => {
+          if (info.id === id) {
+            return { id, ...data, };
+          }
+          return info;
+        }
+      )
+    });
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        <PhoneFrom onCreate={this.create} />
+        {/*JSON.stringify(this.state.information)} {배 열 출력문*/}
+        <PhoneInfoList data={this.state.information} onRemove={this.hanRemove} onUpdate = {this.handleUpdate}/>
+
       </div>
     );
   }
